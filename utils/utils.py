@@ -251,7 +251,9 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4, method=1):
         # image_pred[:, 5:].max(1)[1]表示类最大置信度的index, 也即最大置信度类别
         score = image_pred[:, 4] * image_pred[:, 5:].max(1)[0]
         # Sort by it
-        image_pred = image_pred[(-score).argsort()]
+        image_pred = image_pred[(-score).argsort(), :]
+        # if len(image_pred.shape) < 2:
+        #     image_pred = image_pred.unsqueeze(0)
         class_confs, class_preds = image_pred[:, 5:].max(1, keepdim=True)
         detections = torch.cat((image_pred[:, :5], class_confs.float(), class_preds.float()), 1)
 
@@ -334,7 +336,7 @@ def soft_nms_pytorch(dets, sigma=0.5, thresh=0.2, cuda=0):
         scores[pos:] = weight * scores[pos:]
 
     # select the boxes and keep the corresponding indexes
-    keep = dets[scores > thresh]
+    keep = dets[scores > thresh, :]
     keep_boxes = []
     for i in range(keep.size()[0]):
         keep_boxes.append(keep[i])
