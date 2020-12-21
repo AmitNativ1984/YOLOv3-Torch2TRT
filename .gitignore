@@ -1,0 +1,9 @@
+/output/
+/.idea/
+
+# weight files
+*.weights
+*.74
+*.pt
+
+
