@@ -120,13 +120,20 @@ if __name__ == "__main__":
         yolo_head = YOLOHead(config_path=opt.model_def)
 
         # DarknetBackbone 转换为 TensorRT 模型
+        converstion_begin = time.time()
         if Half is True:
+            print("Half Precision")
             x = torch.rand(size=(1, 3,  opt.img_size, opt.img_size)).cuda().half()
+            print("converting to TRT...")
             model_trt = torch2trt(model_backbone, [x], fp16_mode=True)
+
         else:
             x = torch.rand(size=(1, 3,  opt.img_size, opt.img_size)).cuda()
+            print("converting to TRT...")
             model_trt = torch2trt(model_backbone, [x])
 
+        converstion_end = time.time()
+        print("convertsion took: {}[sec]".format(converstion_end - converstion_begin))
     else:
         if Half:
             model = Darknet(opt.model_def, img_size=opt.img_size, TensorRT=False, Half=True).to(device).half()
@@ -145,6 +152,7 @@ if __name__ == "__main__":
 
     # 速度测试
     if Speed_Test:
+        print("Speed_Test")
         Speed(TensorRT, Half)
 
     dataloader = DataLoader(
@@ -186,6 +194,9 @@ if __name__ == "__main__":
 
             # TensorRT 加速
             if TensorRT:
+                if Half:
+                    input_imgs = input_imgs.half()
+
                 detections = yolo_head(model_trt(input_imgs))
                 detections = non_max_suppression(detections, opt.conf_thres, opt.nms_thres, method=2)
             else:
