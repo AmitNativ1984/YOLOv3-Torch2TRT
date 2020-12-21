@@ -39,7 +39,7 @@ if __name__ == "__main__":
     parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
     parser.add_argument("--checkpoint_model", type=str, help="path to checkpoint model")
     parser.add_argument("--output-path", type=str, default="./weights/trt_weights.engine")
-    parser.add_argument("--precision", type=str, choices=["fp32", "fp16", "int8"], default="fp32")
+    parser.add_argument("--precision", type=str, choices=["fp32", "fp16", "int8"], default="fp16")
     opt = parser.parse_args()
     print(opt)
 
