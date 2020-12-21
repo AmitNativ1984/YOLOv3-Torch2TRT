@@ -75,7 +75,6 @@ def Speed(TensorRT, Half):
         else:
             print("Fp16 Original Model Detect Speed:", 1 / (end - start) * test_data.size()[0], "Hz")
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--image_folder", type=str, default="data/samples/", help="path to dataset")
@@ -88,6 +87,7 @@ if __name__ == "__main__":
     parser.add_argument("--n_cpu", type=int, default=0, help="number of cpu threads to use during batch generation")
     parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
     parser.add_argument("--checkpoint_model", type=str, help="path to checkpoint model")
+    parser.add_argument("--output-path", type=str, default="./weights/trt_weights.engine")
     opt = parser.parse_args()
     # print(opt)
 
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     # TensorRT 只能加速 YOLO 的特征提取网络, YOLO Head 目前还不能应用
     Speed_Test = True
     TensorRT = True
-    Half = True    # 半精度
+    Half = False    # 半精度
 
     if TensorRT is True:
         if Half is True:
