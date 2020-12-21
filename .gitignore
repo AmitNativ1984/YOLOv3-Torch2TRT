@@ -6,4 +6,7 @@
 *.74
 *.pt
 
+# image files
+*.jpg
+
 
